@@ -8,7 +8,8 @@ object RelatedHashtags {
 
   def getHashtagsWithCovid(spark: SparkSession): Unit = {
     //What are the top 10 commonly used hashtags used alongside COVID hashtags?
-    val staticDf = spark.read.json("s3a://adam-king-848/data/twitter_data.json")
+//    val staticDf = spark.read.json("s3a://adam-king-848/data/twitter_data.json")
+    val staticDf = spark.read.json("twitter_data.json")
     question2(spark, staticDf)
   }
 
