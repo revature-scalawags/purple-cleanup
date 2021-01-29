@@ -1,14 +1,15 @@
 package hashtagByRegion
 
 import org.apache.spark.sql.{DataFrame, SparkSession, functions}
-import util.FileWriter.writeDataFrameToFile
 import scala.collection.convert.ImplicitConversions.`collection AsScalaIterable`
+
+import util.FileWriter.writeDataFrameToFile
 
 
 /** This singleton object contains statically accessible methods for working with
  *  Twitter data based on COVID-19 related hashtags.
  * 
- * QUESTION 1: What are the hashtags used to describe COVID-19 by Region (e.g. #covid, #COVID-19, #Coronavirus, #NovelCoronavirus)?
+ * QUESTION 7: What are the hashtags used to describe COVID-19 by Region (e.g. #covid, #COVID-19, #Coronavirus, #NovelCoronavirus)?
  */
 object HashtagByRegion {
 
