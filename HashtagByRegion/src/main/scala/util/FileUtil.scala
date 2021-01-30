@@ -4,7 +4,7 @@ import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.SparkSession
 
 
-/** FileWriter contains a single method for writing a DataFrame to a CSV file and saving it to an S3 bucket. */
+/** FileUtil contains methods for reading and writing files. */
 object FileUtil {
 
 
