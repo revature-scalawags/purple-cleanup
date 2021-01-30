@@ -26,7 +26,7 @@ object Main {
     val twitterDF = FileUtil.getDataFrameFromJson(spark, jsonPath)
 
     // If no arguments are passed in, run getHashtagsByRegionAll
-    // otherwise, run getHashtagsByRegion using args(0) as a parameter.
+    // otherwise, run getHashtagsByRegion using args(0) as the region parameter.
     if (args.isEmpty) {
       HashtagByRegion.getHashtagsByRegionAll(spark, twitterDF)
     } else {
