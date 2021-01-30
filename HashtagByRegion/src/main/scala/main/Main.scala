@@ -22,8 +22,11 @@ object Main {
       .master("local[4]")
       .getOrCreate()
 
+    // twitterDF is the base DataFrame created from the contents of an input json file.
     val twitterDF = FileUtil.getDataFrameFromJson(spark, jsonPath)
 
+    // If no arguments are passed in, run getHashtagsByRegionAll
+    // otherwise, run getHashtagsByRegion using args(0) as a parameter.
     if (args.isEmpty) {
       HashtagByRegion.getHashtagsByRegionAll(spark, twitterDF)
     } else {
