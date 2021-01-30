@@ -5,6 +5,10 @@ import org.apache.spark.sql.SparkSession
 import hashtagByRegion.HashtagByRegion
 import util.FileUtil
 
+
+/**
+  * QUESTION 7: What are the hashtags used to describe COVID-19 by Region (e.g. #covid, #COVID-19, #Coronavirus, #NovelCoronavirus)?
+  */
 object Main {
   def main(args: Array[String]) = {
 
