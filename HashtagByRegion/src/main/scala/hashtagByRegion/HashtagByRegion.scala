@@ -13,7 +13,8 @@ import util.FileUtil.writeDataFrameToFile
 object HashtagByRegion {
 
 
-  /**
+  /** Takes in a base DataFrame and a region as parameters, filters the DataFrame by hashtags and region,
+    * and saves the resulting DataFrame as a csv file.
     *
     * @param spark Current SparkSession
     * @param df Base DataFrame
@@ -21,16 +22,16 @@ object HashtagByRegion {
     */
   def getHashtagsByRegion(spark: SparkSession, df: DataFrame, region: String): Unit = {
     import spark.implicits._
+    // startTime is only used as a part of the output file name
     val startTime = System.currentTimeMillis()
     var outputFilename: String = null
 
     // hashtagDF is a DataFrame that contains 
     val hashtagDF = generateDF(spark, df)
 
-    // If we are passed a region, we need to filter by it
-    // Otherwise we present all of the information
+    // Filter by region
     if (region != null) {
-      val sorteddf = hashtagDF
+      val sortedDF = hashtagDF
         .filter($"region" === region)
         //explode List(Hashtags),Region to own rows resulting in Row(Hashtag,Region)
         .select(functions.explode($"Hashtags").as("Hashtag"), $"Region")
@@ -40,25 +41,15 @@ object HashtagByRegion {
         .count()
         .orderBy(functions.desc("Count"))
 
+      // Write data to file for specified region
       outputFilename = s"hbr-${region.replaceAll("\\s+","")}-$startTime"
-      writeDataFrameToFile(sorteddf, outputFilename)
-    } else {
-      val sorteddf = hashtagDF
-        //explode List(Hashtags),Region to own rows resulting in Row(Hashtag,Region)
-        .select(functions.explode($"Hashtags").as("Hashtag"), $"Region")
-        //group by the same Region and Hashtag
-        .groupBy("Region", "Hashtag")
-        //count total of each Region/Hashtag appearance
-        .count()
-        .orderBy(functions.desc("Count"))
-
-      outputFilename = s"hbr-AllRegions-$startTime"
-      writeDataFrameToFile(sorteddf, outputFilename)
+      writeDataFrameToFile(sortedDF, outputFilename)
     }
   }
 
 
-  /** 
+  /** Takes in a base DataFrame as a parameter, filters the DataFrame by hashtags,
+    * and saves the resulting DataFrame as a csv file.
     *
     * @param spark Current SparkSession
     * @param df Base DataFrame
@@ -77,19 +68,22 @@ object HashtagByRegion {
       // Count total of each Region/Hashtag appearance
       .count()
 
-    val greatdf = hashtagDF
+    // Creates a new DataFrame by sorting hashtagDF by "Count" in descending order
+    val sortedDF = hashtagDF
       .orderBy(functions.desc("Count"))
 
+    // Write data for all regions to single file
     outputFilename = s"hbr-all-$startTime"
-    writeDataFrameToFile(greatdf, outputFilename)
+    writeDataFrameToFile(sortedDF, outputFilename)
 
+    // Write data for each region to individual files
     RegionDictionary.getRegionList.foreach(region => {
-      val bestdf = hashtagDF
+      val regionalDF = hashtagDF
         .filter($"Region" === region)
         .orderBy(functions.desc("Count"))
 
       outputFilename = s"hbr-${region.replaceAll("\\s+","")}-$startTime"
-      writeDataFrameToFile(bestdf, outputFilename)
+      writeDataFrameToFile(regionalDF, outputFilename)
     })
   }
 
