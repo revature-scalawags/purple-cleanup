@@ -3,10 +3,10 @@ package hashtagByRegion
 import org.apache.spark.sql.{DataFrame, SparkSession, functions}
 import scala.collection.convert.ImplicitConversions.`collection AsScalaIterable`
 
-import util.FileWriter.writeDataFrameToFile
+import util.FileUtil.writeDataFrameToFile
 
 
-/** This singleton object contains statically accessible methods for working with
+/** HashtagByRegion is a singleton object that contains statically accessible methods for working with
  *  Twitter data based on COVID-19 related hashtags.
  * 
  * QUESTION 7: What are the hashtags used to describe COVID-19 by Region (e.g. #covid, #COVID-19, #Coronavirus, #NovelCoronavirus)?
@@ -14,48 +14,13 @@ import util.FileWriter.writeDataFrameToFile
 object HashtagByRegion {
 
 
-  /** 
+  /**
     *
     * @param spark Current SparkSession
+    * @param df
     * @param region Specific region
     */
-  def getHashtagsByRegion(spark: SparkSession, region: String = null): Unit = {
-    // This method only exists to read in the json file and then call another method.  Why?
-    val staticDf = getJSON(spark, "s3a://adam-king-848/data/twitter_data.json")
-    question1(spark, staticDf, region)
-  }
-
-
-  /**
-    *
-    * @param spark Current SparkSession
-    */
-  def getHashtagsByRegionAll(spark: SparkSession): Unit = {
-    // This method only exists to read in the json file and then call another method.  Why?
-    val staticDf = getJSON(spark, "s3a://adam-king-848/data/twitter_data.json")
-    question1all(spark, staticDf)
-  }
-
-
-  /** Reads in a JSON file from the supplied path and returns its data
-    * as a DataFrame
-    *
-    * @param spark Current SparkSession
-    * @param path Path to the input JSON file
-    * @return The DataFrame build from input JSON file
-    */
-  private def getJSON(spark: SparkSession, path: String): DataFrame = {
-    spark.read.json(path)
-  }
-
-
-  /**
-    *
-    * @param spark
-    * @param df
-    * @param region
-    */
-  private def question1(spark: SparkSession, df: DataFrame, region: String): Unit = {
+  def getHashtagsByRegion(spark: SparkSession, df: DataFrame, region: String): Unit = {
     import spark.implicits._
     val startTime = System.currentTimeMillis()
     var outputFilename: String = null
@@ -93,8 +58,12 @@ object HashtagByRegion {
   }
 
 
-
-  private def question1all(spark: SparkSession, df: DataFrame): Unit = {
+  /**
+    *
+    * @param spark Current SparkSession
+    * @param df
+    */
+  def getHashtagsByRegionAll(spark: SparkSession, df: DataFrame): Unit = {
     import spark.implicits._
     val startTime = System.currentTimeMillis()
     var outputFilename: String = null
@@ -124,6 +93,12 @@ object HashtagByRegion {
   }
 
 
+  /** 
+    *
+    * @param spark
+    * @param df
+    * @return
+    */
   private def generateDF(spark: SparkSession, df: DataFrame): DataFrame = {
     import spark.implicits._
     val newDF = df
