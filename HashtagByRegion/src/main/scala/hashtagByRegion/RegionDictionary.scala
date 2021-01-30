@@ -1,5 +1,11 @@
 package hashtagByRegion
 
+
+/** Singleton object that establishes a Map in which each region is the key and
+  * each value is a List of country names (as Strings) within that region. 
+  * 
+  * Also contains methods for working with the Map.
+  */
 object RegionDictionary {
   private val regionMap = Map (
     "Africa" ->
@@ -259,14 +265,25 @@ object RegionDictionary {
       )
   )
 
-  def reverseMapSearch(country: String): String ={
+
+  /** Takes a specific country name as input and returns the region (as a String) that contains that country.
+    *
+    * @param country The name of the country to be searched for
+    * @return The region that contains that country or "Country Not Found"
+    */
+  def reverseMapSearch(country: String): String = {
     regionMap.foreach( region =>
       if (region._2.contains(country)) {return region._1}
     )
     "Country Not Found"
   }
 
-    def getRegionList: List[String] = {
-        regionMap.keys.toList
-    }
+
+  /** Returns a full List of country names as Strings.
+    *
+    * @return List[String] of all countries
+    */
+  def getRegionList: List[String] = {
+      regionMap.keys.toList
+  }
 }
