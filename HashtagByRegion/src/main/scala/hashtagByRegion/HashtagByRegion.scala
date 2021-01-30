@@ -7,9 +7,9 @@ import util.FileUtil.writeDataFrameToFile
 
 
 /** HashtagByRegion is a singleton object that contains statically accessible methods for working with
- *  Twitter data based on COVID-19 related hashtags.
- * 
- */
+  * Twitter data based on COVID-19 related hashtags.
+  * 
+  */
 object HashtagByRegion {
 
 
