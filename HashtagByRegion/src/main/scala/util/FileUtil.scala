@@ -19,7 +19,7 @@ object FileUtil {
         .limit(maxRecords)
         .write
         .format("csv")
-        .save(s"s3a://adam-king-848/results/purple/$outputFilename")  // TODO Change this path
+        .save(s"/output/$outputFilename")  // TODO Change this path
   }
 
 
