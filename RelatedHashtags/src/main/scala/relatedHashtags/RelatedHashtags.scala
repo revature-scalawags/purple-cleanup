@@ -6,13 +6,18 @@ import scala.collection.convert.ImplicitConversions.`collection AsScalaIterable`
 
 object RelatedHashtags {
 
+  /**
+    * Find the top 10 Hashtags used with the COVID hashtag
+    *
+    * @param spark
+    */
   def getHashtagsWithCovid(spark: SparkSession): Unit = {
     //What are the top 10 commonly used hashtags used alongside COVID hashtags?
     val staticDf = spark.read.json("s3a://adam-king-848/data/twitter_data.json")
-    question2(spark, staticDf)
+    questionHelper(spark, staticDf)
   }
 
-  private def question2(spark: SparkSession, df: DataFrame): Unit = {
+  private def questionHelper(spark: SparkSession, df: DataFrame): Unit = {
     import spark.implicits._
     val startTime = System.currentTimeMillis()
     val covidRelatedWordsList = CovidTermsList.getTermsList
