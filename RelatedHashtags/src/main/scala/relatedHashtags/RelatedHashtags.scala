@@ -4,19 +4,30 @@ import org.apache.spark.sql.{DataFrame, SparkSession, functions}
 import util.FileWriter.writeDataFrameToFile
 import scala.collection.convert.ImplicitConversions.`collection AsScalaIterable`
 
+/**
+  * RelatedHashtags is a singleton object that contains statically accessible methods for working with
+  * Twitter data based on COVID-19 related hashtags.
+  */
 object RelatedHashtags {
 
   /**
-    * Find the top 10 Hashtags used with the COVID hashtag
+    * Takes in a base DataFrame as a parameter, filters the DataFrame by hashtags and saves
+    * the resulting DataFrame as a csv file.
     *
-    * @param spark
+    * @param spark Current SparkSession
+    * @param df Base DataFrame
     */
-  def getHashtagsWithCovid(spark: SparkSession): Unit = {
+  def getHashtagsWithCovid(spark: SparkSession, df: DataFrame): Unit = {
     //What are the top 10 commonly used hashtags used alongside COVID hashtags?
-    val staticDf = spark.read.json("s3a://adam-king-848/data/twitter_data.json")
-    questionHelper(spark, staticDf)
+    questionHelper(spark, df)
   }
 
+  /**
+    * Private helper method for getHashtagsWithCovid.
+    *
+    * @param spark Current SparkSession
+    * @param df Base DataFrame
+    */
   private def questionHelper(spark: SparkSession, df: DataFrame): Unit = {
     import spark.implicits._
     val startTime = System.currentTimeMillis()

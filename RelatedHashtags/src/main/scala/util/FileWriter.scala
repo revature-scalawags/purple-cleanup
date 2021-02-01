@@ -1,6 +1,8 @@
 package util
 
 import org.apache.spark.sql.DataFrame
+import org.apache.spark.sql.SparkSession
+
 
 
 /** FileWriter contains a single method for writing a DataFrame to a CSV file and saving it to an S3 bucket. */
@@ -18,5 +20,16 @@ object FileWriter {
         .write
         .format("csv")
         .save(s"s3a://adam-king-848/results/purple/$outputFilename")  // Depending on our S3 structure, this may need to be changed.
+  }
+
+  /** Reads in a JSON file from the supplied path and returns its data
+    * as a DataFrame
+    *
+    * @param spark Current SparkSession
+    * @param path Path to the input JSON file
+    * @return The DataFrame built from input JSON file
+    */
+  def getDataFrameFromJson(spark: SparkSession, path: String): DataFrame = {
+    spark.read.json(path)
   }
 }
