@@ -4,6 +4,7 @@ version := "0.1"
 
 libraryDependencies  ++= Seq(
   "org.apache.spark" %% "spark-sql" % "3.0.1",
+  "com.github.seratch" %% "awscala-s3" % "0.8.+"
 )
 
 scalaVersion := "2.12.10"
