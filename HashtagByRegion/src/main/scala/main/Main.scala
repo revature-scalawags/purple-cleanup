@@ -12,15 +12,19 @@ import util.FileUtil
 object Main {
   def main(args: Array[String]) = {
 
-    // Original jsonPath = s3a://adam-king-848/data/twitter_data.json
     // jsonPath currently points to test data
-    val jsonPath = "s3://covid-analysis-p3/datalake/01-31-21-twitter_data.json"
+    ////// After an EMR cluster has been established, update path to "s3a://covid-analysis-p3/datalake/twitter-covid/01-31-21-twitter_data.json" //////////
+    val jsonPath = "s3a://covid-analysis-p3/datalake/twitter-covid/test_twitter_data.json"
 
     val spark = SparkSession
       .builder()
       .appName("Hashtag-By-Region")
       .master("local[4]")
       .getOrCreate()
+
+    spark.sparkContext.hadoopConfiguration.set("fs.s3a.awsAccessKeyId", sys.env("AWS_ACCESS_KEY_ID"))
+    spark.sparkContext.hadoopConfiguration.set("fs.s3a.awsSecretAccessKey", sys.env("AWS_SECRET_ACCESS_KEY"))
+    spark.sparkContext.hadoopConfiguration.set("fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")
 
     // twitterDF is the base DataFrame created from the contents of an input json file.
     val twitterDF = FileUtil.getDataFrameFromJson(spark, jsonPath)
@@ -33,5 +37,7 @@ object Main {
       val region = args(0)
       HashtagByRegion.getHashtagsByRegion(spark, twitterDF, region)
     }
+
+    spark.stop()
   }
 }

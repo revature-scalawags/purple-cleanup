@@ -15,11 +15,10 @@ object FileUtil {
     * @param maxRecords The number of records to be saved to the output file.
     */
   def writeDataFrameToFile(dataFrame: DataFrame, outputFilename: String, maxRecords: Int = 100) = {
-      dataFrame
-        .limit(maxRecords)
-        .write
-        .format("csv")
-        .save(s"/output/$outputFilename")  // TODO Change this path
+    dataFrame
+      .limit(maxRecords)
+      .write
+      .csv(s"s3a://covid-analysis-p3/datawarehouse/twitter-covid/HashtagByRegion/${outputFilename}")
   }
 
 

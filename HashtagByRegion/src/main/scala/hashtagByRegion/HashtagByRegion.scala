@@ -4,7 +4,6 @@ import org.apache.spark.sql.{DataFrame, SparkSession, functions}
 import scala.collection.convert.ImplicitConversions.`collection AsScalaIterable`
 
 import util.FileUtil.writeDataFrameToFile
-import util.S3Client
 
 
 /** HashtagByRegion is a singleton object that contains statically accessible methods for working with
@@ -12,13 +11,6 @@ import util.S3Client
   * 
   */
 object HashtagByRegion {
-
-  val key = System.getenv("AWS_ACCESS_KEY_ID")
-  val secret = System.getenv("AWS_SECRET_ACCESS_KEY")
-  val client = S3Client.buildS3Client(
-    key,
-    secret
-  ) // Build the S3 client with access keys
 
 
   /** Takes in a base DataFrame and a region as parameters, filters the DataFrame by hashtags and region,
@@ -30,6 +22,7 @@ object HashtagByRegion {
     */
   def getHashtagsByRegion(spark: SparkSession, df: DataFrame, region: String): Unit = {
     import spark.implicits._
+    
     // startTime is only used as a part of the output file name
     val startTime = System.currentTimeMillis()
     var outputFilename: String = null
@@ -64,6 +57,7 @@ object HashtagByRegion {
     */
   def getHashtagsByRegionAll(spark: SparkSession, df: DataFrame): Unit = {
     import spark.implicits._
+    
     // startTime is only used as a part of the output file name
     val startTime = System.currentTimeMillis()
     var outputFilename: String = null
@@ -118,6 +112,6 @@ object HashtagByRegion {
       .withColumnRenamed("_1", "Hashtags")
       .withColumnRenamed("_2", "Region")
 
-      hashtagDF
+    hashtagDF
   }
 }
